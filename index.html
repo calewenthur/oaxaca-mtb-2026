@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Oaxaca MTB Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+  <div id="app"></div>
+  <script>
+  const CSS_TEXT = `
+  :root{--bg:#0b1710;--card:#111d14;--alt:#162019;--bdr:#223027;--ora:#e56b1a;--grn:#60ab6f;--gld:#f0bf42;--red:#c03818;--txt:#ede8db;--dim:#8fa88a;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'Syne',sans-serif;--body:'DM Sans',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;max-width:100%}
+  body{background:var(--bg);color:var(--txt);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;max-width:100%;word-break:break-word}
+.wrap{max-width:880px;margin:0 auto;padding:56px 24px 90px}
+.eye{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--ora);margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.eye::before{content:'';display:block;width:36px;height:1px;background:var(--ora)}
+  h1{font-family:var(--serif);font-size:clamp(38px,7vw,64px);font-weight:300;line-height:.95;letter-spacing:-.01em;margin-bottom:14px}
+h1 em{font-style:italic;color:var(--ora)}
+.sub-date{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.sub-desc{color:var(--dim);font-size:14.5px;max-width:560px;margin-top:14px;line-height:1.75}
+.section{margin-top:56px}
+.sh{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.sh h2{font-family:var(--serif);font-size:26px;font-weight:300;font-style:italic;white-space:nowrap}
+.sh-line{flex:1;height:1px;background:var(--bdr)}
+.sh-tag{font-family:var(--sans);font-size:9px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--ora);white-space:nowrap}
+.costgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+.cc{background:var(--card);border:1px solid var(--bdr);padding:22px 18px}
+.cc-label{font-family:var(--sans);font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--grn);margin-bottom:10px}
+.cc-num{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--txt);line-height:1}
+.cc-sub{font-size:11.5px;color:var(--dim);margin-top:6px;line-height:1.5}
+.cc.hi{border-color:var(--ora)}.cc.hi .cc-num{color:var(--ora)}
+  .progress{margin-top:16px;height:6px;background:var(--alt);border:1px solid var(--bdr);overflow:hidden}
+.progress-bar{height:100%;background:var(--grn);transition:width .3s ease}
+.notes{display:flex;flex-direction:column;gap:14px}
+.note{background:var(--alt);border:1px solid var(--bdr);border-left:3px solid var(--gld);padding:20px 24px;font-size:13.5px;color:var(--dim);line-height:1.8}
+.note strong{color:var(--txt)}
+.note ul{list-style:none;margin-top:10px}
+.note li{padding:3px 0}
+.note li::before{content:'→ ';color:var(--gld)}
+.days{display:flex;flex-direction:column;gap:3px}
+.dc{display:grid;grid-template-columns:92px 1fr;background:var(--card);border:1px solid var(--bdr)}
+.dc.alt{background:var(--alt)}
+.dn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 8px;background:rgba(0,0,0,.25);border-right:1px solid var(--bdr);text-align:center}
+.dn-date{font-family:var(--sans);font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.dn-big{font-family:var(--serif);font-size:30px;font-weight:700;line-height:1;color:var(--ora)}
+.dn-day{font-family:var(--sans);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.badge{margin-top:8px;font-size:7.5px;font-family:var(--sans);font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:2px}
+.badge.ride{background:var(--ora);color:#0b1710}.badge.epic{background:var(--red);color:#fff}
+.badge.guide{background:var(--grn);color:#0b1710}.badge.culture{background:var(--gld);color:#1a1100}
+.badge.travel{background:#243529;color:var(--dim)}.badge.rest{background:var(--bdr);color:var(--dim)}
+.db{padding:16px 22px}
+.db-loc{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--grn);margin-bottom:6px}
+.db-title{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.2;margin-bottom:6px}
+.db-desc{color:var(--dim);font-size:13px;line-height:1.7}
+.db-desc strong{color:var(--txt)}
+  .cal-link{display:inline-block;margin-top:12px;font-family:var(--sans);font-size:9.5px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--gld);border:1px solid var(--bdr);padding:7px 13px;border-radius:2px;text-decoration:none;transition:.15s}
+.cal-link:hover{border-color:var(--gld);color:var(--txt)}
+footer{margin-top:70px;text-align:center;font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#344a38}
+footer span{color:var(--ora)}
+@media(max-width:720px){
+  .costgrid{grid-template-columns:repeat(2,1fr)}
+      .dc{grid-template-columns:64px 1fr}
+  .dn{padding:12px 4px}.dn-big{font-size:22px}
+  .wrap{padding:40px 16px 70px}
+}
+@media(max-width:480px){
+  .wrap{padding:32px 14px 60px}
+  h1{font-size:clamp(30px,10vw,40px)}
+      .sub-date{font-size:10.5px;letter-spacing:.15em}
+  .sh h2{font-size:21px}
+  .sh-tag{display:none}
+      .costgrid{grid-template-columns:1fr}
+  .cc{padding:16px 14px}
+  .cc-num{font-size:24px}
+  .dc{grid-template-columns:56px 1fr}
+  .dn{padding:10px 3px}
+  .dn-date{font-size:7px}
+  .dn-big{font-size:18px}
+  .dn-day{font-size:7px}
+  .badge{font-size:6.5px;padding:2px 5px}
+  .db{padding:14px 16px}
+  .db-title{font-size:17px}
+      .db-desc{font-size:12.5px}
+      .note{padding:16px 16px}
+  footer{font-size:8.5px;letter-spacing:.12em}
+        }
+`;
+
+function App(STATE){
+    const GUIDE_MXN = 50000;
+  const FX_RATE = 17.0344;
+  const LODGING_USD = 5600;
+
+  if(!document.getElementById('trk-style')){
+    const st = document.createElement('style');
+    st.id = 'trk-style';
+    st.textContent = CSS_TEXT;
+    document.head.appendChild(st);
+}
+
+  const DAYS = [
+{d:'Oct 8',n:'8',day:'Thu',badge:'travel',label:'Travel',loc:'San Diego → Oaxaca City',title:'Arrival — Welcome to Oaxaca',desc:'Flight lands OAX <strong>2:35PM</strong>. Airbnb check-in, evening orientation with Hugo — confirm shuttle logistics, early to bed.'},
+{d:'Oct 9',n:'9',day:'Fri',badge:'ride',label:'Ride',loc:'La Cumbre Ixtepeji',title:'First Descents — Ixtepeji Preview',desc:'Early riders warm up at Ixtepeji, 10,500ft pine forest. Others arriving today can explore the markets in the city.'},
+{d:'Oct 10',n:'10',day:'Sat',badge:'ride',label:'Ride',loc:'La Cumbre Ixtepeji · Full Group',title:'All In — Ixtepeji Full Send + Dinner',desc:'Full group hits the classics: <strong>El Toro, Llano Carreta, El Imposible.</strong> <strong>Evening: dinner at Ancestral Cocina Tradicional, 6:45PM.</strong>'},
+{d:'Oct 11',n:'11',day:'Sun',badge:'epic',label:'Epic',loc:'Yubila → Ratón Loco → Mil Ríos',title:'The Big One — Mil Ríos',desc:'New Yubila trails into <strong>Mil Ríos</strong> — 13.2km, 1,250m descent, ~2hr of backcountry flow. The highlight of the trip.'},
+{d:'Oct 12',n:'12',day:'Mon',badge:'guide',label:'Guided',loc:'San Pablo Etla',title:'Valley Classics + Dinner at Casa Oaxaca',desc:'Hugo + a local trail host lead the Etla classics via <strong>La Mesita Eco-Center</strong> (80 pesos trail fee). <strong>Evening: dinner at Casa Oaxaca, 7:30PM</strong> (reservation confirmed, party of 10).'},
+{d:'Oct 13',n:'13',day:'Tue',badge:'ride',label:'Ride',loc:'Guacamayas · San Gabriel Etla',title:'Into the Unknown — Guacamayas + Dinner',desc:'Fresh, less-documented trail zone above San Gabriel Etla — punchy climbs, technical descents, big views. <strong>Evening: dinner at Criollo Taco Bar, 7:00PM</strong> (reservation confirmed, party of 10).'},
+{d:'Oct 14',n:'14',day:'Wed',badge:'culture',label:'Culture',loc:'Hierve el Agua → Teotitlán del Valle',title:'Wonder Day — Hierve el Agua',desc:'Hugo + local host shuttle 70km east to the petrified waterfalls, descend toward Río Salado. Finish with a Zapotec family meal + weaving visit in Teotitlán. <strong>9 riders + bikes</strong> — longest logistics day.'},
+{d:'Oct 15',n:'15',day:'Thu',badge:'ride',label:'Ride',loc:'Benito Juárez · Sierra Norte',title:'Sierra’s Best Secret + Dinner',desc:'New trail construction — an unforgettable <strong>1,700m descent</strong> into the valley. Zero crowds, serious terrain. <strong>Evening: dinner at Barbacoa Obispo Cocina Rural, 6:15PM</strong> (reservation confirmed, party of 10, Jardín).'},
+{d:'Oct 16',n:'16',day:'Fri',badge:'epic',label:'Epic',loc:'Sierra Norte → Teotitlán del Valle',title:'Pistas Largas + Cooking Class',desc:'Final full ride day — long, committing point-to-point terrain. That evening: <strong>traditional Oaxacan cooking class</strong> in Teotitlán (mole negro, tortillas, mezcal).'},
+{d:'Oct 17',n:'17',day:'Sat',badge:'rest',label:'Rest',loc:'Oaxaca City',title:'Pack Bikes + Market Day',desc:'Box bikes, hit <strong>Mercado Benito Juárez</strong> for mezcal, chocolate, textiles. The city is deep into Día de los Muertos preparations — marigolds and calaveras everywhere (the holiday itself is Nov 1–2, about two weeks after we leave).'},
+{d:'Oct 18',n:'18',day:'Sun',badge:'travel',label:'Travel',loc:'Oaxaca International → Home',title:'Departures',desc:'7 riders on the early AM flight, the rest throughout the day. All out by end of day.'}
+  ];
+
+  function money(n){
+    return '$' + n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+  function computeAmounts(state){
+    const guideUSD = GUIDE_MXN / FX_RATE;
+    const total = guideUSD + LODGING_USD;
+    const perPerson = total / state.riders.length;
+    return {guideUSD, total, perPerson};
+}
+
+  function costGridHTML(state){
+    const amt = computeAmounts(state);
+    return `
+      <div class="costgrid">
+        <div class="cc hi"><div class="cc-label">Per Person</div><div class="cc-num">${money(amt.perPerson)}</div><div class="cc-sub">Split 10 ways</div></div>
+        <div class="cc"><div class="cc-label">Guide · Hugo (all-in)</div><div class="cc-num">${money(amt.guideUSD)}</div><div class="cc-sub">50,000 MXN @ ~17.03/USD (Aug 30, 2026)</div></div>
+        <div class="cc"><div class="cc-label">Lodging · Airbnb (10 nights)</div><div class="cc-num">${money(LODGING_USD)}</div><div class="cc-sub">Base camp, full group<br>Calle José López Alavez 1127, Barrio de Xochimilco, 68040, Oaxaca, Oaxaca, Mexico<br><a href="https://www.airbnb.com/rooms/1366924243419044874" target="_blank" rel="noopener" style="color:var(--ora)">View listing →</a></div></div>
+      </div>`;
+}
+
+  function paymentNotesHTML(state){
+    const amt = computeAmounts(state);
+    const guidePerPersonMXN = GUIDE_MXN / state.riders.length;
+    const guidePerPersonUSD = amt.guideUSD / state.riders.length;
+    const lodgingPerPerson = LODGING_USD / state.riders.length;
+    return `
+      <div class="notes">
+        <div class="note">
+          <strong>Cash to Hugo (guide, in-country):</strong> total <strong>${GUIDE_MXN.toLocaleString('en-US')} MXN</strong> (~${money(amt.guideUSD)} USD @ ~17.03/USD) — bring physical cash.
+          <ul>
+            <li>Per person: ~${guidePerPersonMXN.toLocaleString('en-US',{maximumFractionDigits:0})} MXN (~${money(guidePerPersonUSD)} USD)</li>
+            <li>Split however works for the group — pesos preferred, exchange rate will shift slightly by October</li>
+            <li>ATMs are available at the Oaxaca airport and all over town — easier and often better rates than getting pesos from your bank ahead of time</li>
+          </ul>
+        </div>
+        <div class="note">
+          <strong>Airbnb (lodging):</strong> approximately ${money(LODGING_USD)} total, or ~${money(lodgingPerPerson)} per person — this is an estimate.
+          <ul>
+            <li>Address: Calle José López Alavez 1127, Barrio de Xochimilco, 68040, Oaxaca, Oaxaca, Mexico</li>
+            <li>Listing: <a href="https://www.airbnb.com/rooms/1366924243419044874" target="_blank" rel="noopener" style="color:var(--gld)">airbnb.com/rooms/1366924243419044874</a></li>
+            <li>Lisi will reach out separately with the final amount and how to send it</li>
+          </ul>
+        </div>
+      </div>`;
+}
+
+  function flightsHTML(){
+    return `
+      <div class="notes">
+        <div class="note">
+          <strong>San Diego crew (7):</strong> Cale, Lisi, David, Chris, Kennon, Phil, Melissa
+          <ul>
+            <li>Outbound Thu Oct 8 — Volaris Y4 3140, Tijuana (TIJ) → Oaxaca (OAX), ~10:00AM TIJ departure / ~2:48PM OAX arrival</li>
+            <li>Return Sun Oct 18 — Volaris Y4 3141, Oaxaca (OAX) → Tijuana (TIJ), 6:20AM OAX departure</li>
+            <li>Times are approximate (Volaris schedules can shift) — confirm against your own ticket</li>
+            <li>This flies out of Tijuana (TIJ), not San Diego — plan to cross via CBX (Cross Border Xpress), the pedestrian bridge from San Diego straight into the TIJ terminal</li>
+          </ul>
+        </div>
+        <div class="note">
+          <strong>Bryson & Sam (Colorado):</strong> flight info TBD — add once booked
+        </div>
+        <div class="note">
+          <strong>Katy (Madison, WI):</strong> flight info TBD — add once booked
+        </div>
+      </div>`;
+}
+
+  function gearHTML(){
+    return `
+      <div class="notes">
+        <div class="note">
+          <strong>Protection:</strong>
+          <ul>
+            <li>Full-face helmet</li>
+            <li>Knee pads</li>
+            <li>Chest protector, if that's your thing — riding is steep</li>
+          </ul>
+        </div>
+        <div class="note">
+          <strong>Bike setup:</strong>
+          <ul>
+            <li>200mm rotors, 4-piston brakes</li>
+            <li>Longer travel is better — you'll have more fun on it</li>
+            <li>Riding is roughly 90% downhill / 10% uphill</li>
+            <li>Bring spare brake pads — though Zona Bici in town has a solid selection if you need more</li>
+          </ul>
+        </div>
+        <div class="note">
+          <strong>Hydration:</strong>
+          <ul>
+            <li>Hip pack for the long/epic trail days</li>
+            <li>A water bottle is enough for the shorter days</li>
+          </ul>
+        </div>
+        <div class="note">
+          <strong>Travel insurance:</strong> not mandatory, but this is an MTB trip in Mexico — worth considering.
+          <ul>
+            <li>Recommended: <a href="https://www.squaremouth.com/" target="_blank" rel="noopener" style="color:var(--gld)">squaremouth.com</a></li>
+          </ul>
+        </div>
+      </div>`;
+}
+
+  function escapeICS(str){
+    return String(str).replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');
+}
+
+  function dayICSHref(d){
+    const day = parseInt(d.n,10);
+    const pad = n => String(n).padStart(2,'0');
+    const startStr = `2026${pad(10)}${pad(day)}`;
+    const endStr = `2026${pad(10)}${pad(day+1)}`;
+    const cleanDesc = escapeICS(d.desc.replace(/<[^>]+>/g,''));
+    const summary = escapeICS(`${d.title}`);
+    const location = escapeICS(d.loc);
+    const uid = `day${day}-oaxaca-mtb-2026@triptracker`;
+    const ics = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Oaxaca MTB Expedition//Trip Tracker//EN',
+      'CALSCALE:GREGORIAN',
+      'BEGIN:VEVENT',
+      `UID:${uid}`,
+            'DTSTAMP:20260830T000000Z',
+            `DTSTART;VALUE=DATE:${startStr}`,
+            `DTEND;VALUE=DATE:${endStr}`,
+            `SUMMARY:${summary}`,
+            `DESCRIPTION:${cleanDesc}`,
+            `LOCATION:${location}`,
+            'END:VEVENT',
+            'END:VCALENDAR'
+          ].join('\r\n');
+          return 'data:text/calendar;charset=utf-8;base64,' + btoa(unescape(encodeURIComponent(ics)));
+        }
+
+  function calendarHTML(){
+    return `<div class="days">` + DAYS.map((d,i)=>`
+        <div class="dc ${i%2?'alt':''}">
+          <div class="dn"><div class="dn-date">${d.d}</div><div class="dn-big">${d.n}</div><div class="dn-day">${d.day}</div><div class="badge ${d.badge}">${d.label}</div></div>
+          <div class="db"><div class="db-loc">${d.loc}</div><div class="db-title">${d.title}</div><div class="db-desc">${d.desc}</div><a class="cal-link" href="${dayICSHref(d)}" download="oaxaca-day-${d.n}.ics">+ Add to Calendar</a></div>
+        </div>`).join('') + `</div>`;
+}
+
+  function render(state, opts){
+    opts = opts || {};
+    const root = document.getElementById('app');
+    root.innerHTML = `
+      <div class="wrap">
+        <div class="eye">Sierra Norte · Mountain Bike Expedition</div>
+        <h1>Oaxaca MTB <em>Trip Tracker</em></h1>
+        <div class="sub-date">Oct 8–18, 2026 · 10 Travelers</div>
+        <div class="sub-desc">Shared page for the crew — what's owed, how to pay Hugo and the Airbnb, and what's happening each day.</div>
+
+        <div class="section">
+          <div class="sh"><h2>Costs</h2><div class="sh-line"></div><div class="sh-tag">Split 10 Ways</div></div>
+          ${costGridHTML(state)}
+        </div>
+
+        <div class="section">
+          <div class="sh"><h2>Payments</h2><div class="sh-line"></div><div class="sh-tag">What's Owed</div></div>
+          ${paymentNotesHTML(state)}
+          <div class="note" style="margin-top:16px">
+            <strong>Not included above — pay locally / separately:</strong>
+            <ul>
+              <li>Dinner at Ancestral Cocina Tradicional (Sat Oct 10, 6:45PM) — amount TBD</li>
+              <li>Dinner at Casa Oaxaca (Mon Oct 12, 7:30PM, reservation confirmed) — amount TBD</li>
+              <li>Dinner at Criollo Taco Bar (Tue Oct 13, 7:00PM, reservation confirmed) — amount TBD</li>
+              <li>Dinner at Barbacoa Obispo Cocina Rural (Thu Oct 15, 6:15PM, reservation confirmed) — amount TBD</li>
+              <li>Trail fees — Ixtepeji entry 200 pesos, La Mesita 80/150 pesos, Guacamayas cash</li>
+              <li>Personal textile, art, pottery & mezcal budget (non-negotiable)</li>
+              <li>ATMs are available at the Oaxaca airport and all over town for these cash costs — easier than getting pesos beforehand</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="sh"><h2>Flights</h2><div class="sh-line"></div><div class="sh-tag">Travel Details</div></div>
+          ${flightsHTML()}
+        </div>
+
+        <div class="section">
+          <div class="sh"><h2>What to Bring</h2><div class="sh-line"></div><div class="sh-tag">Gear & Bike Setup</div></div>
+          ${gearHTML()}
+        </div>
+
+        <div class="section">
+          <div class="sh"><h2>Day by Day</h2><div class="sh-line"></div><div class="sh-tag">Oct 8–18</div></div>
+          ${calendarHTML()}
+        </div>
+
+        <footer><span>Oaxaca MTB Expedition</span> &nbsp;·&nbsp; Sierra Norte, Mexico &nbsp;·&nbsp; Oct 8–18, 2026</footer>
+      </div>
+    `;
+}
+
+  render(STATE);
+}
+
+App({
+  riders: [
+{name:'Bryson', paid:false},
+{name:'Sam', paid:false},
+{name:'David', paid:false},
+{name:'Katy', paid:false},
+{name:'Kennon', paid:false},
+{name:'Lisi', paid:false},
+{name:'Melissa', paid:false},
+{name:'Chris', paid:false},
+{name:'Phil', paid:false},
+{name:'Cale', paid:false}
+  ]
+});
+</script>
+  </body>
+  </html>
