@@ -96,6 +96,7 @@ function App(STATE){
   const GUIDE_MXN = 50000;
   const FX_RATE = 17.0344;
   const LODGING_USD = 5600;
+  const COST_SPLIT = 10;
 
   if(!document.getElementById('trk-style')){
     const st = document.createElement('style');
@@ -125,7 +126,7 @@ function App(STATE){
   function computeAmounts(state){
     const guideUSD = GUIDE_MXN / FX_RATE;
     const total = guideUSD + LODGING_USD;
-    const perPerson = total / state.riders.length;
+    const perPerson = total / COST_SPLIT;
     return {guideUSD, total, perPerson};
   }
 
@@ -141,9 +142,9 @@ function App(STATE){
 
   function paymentNotesHTML(state){
     const amt = computeAmounts(state);
-    const guidePerPersonMXN = GUIDE_MXN / state.riders.length;
-    const guidePerPersonUSD = amt.guideUSD / state.riders.length;
-    const lodgingPerPerson = LODGING_USD / state.riders.length;
+    const guidePerPersonMXN = GUIDE_MXN / COST_SPLIT;
+    const guidePerPersonUSD = amt.guideUSD / COST_SPLIT;
+    const lodgingPerPerson = LODGING_USD / COST_SPLIT;
     return `
       <div class="notes">
         <div class="note">
@@ -178,7 +179,7 @@ function App(STATE){
           </ul>
         </div>
         <div class="note">
-          <strong>Bryson & Sam (Colorado):</strong> flight info TBD — add once booked
+          <strong>Bryson (Colorado):</strong> flight info TBD — add once booked
         </div>
         <div class="note">
           <strong>Katy (Madison, WI):</strong> flight info TBD — add once booked
@@ -320,7 +321,6 @@ function App(STATE){
 App({
   riders: [
     {name:'Bryson', paid:false},
-    {name:'Sam', paid:false},
     {name:'David', paid:false},
     {name:'Katy', paid:false},
     {name:'Kennon', paid:false},
