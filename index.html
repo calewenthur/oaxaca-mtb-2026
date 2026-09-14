@@ -95,8 +95,9 @@ footer span{color:var(--ora)}
 function App(STATE){
   const GUIDE_MXN = 50000;
   const FX_RATE = 17.0344;
-  const LODGING_USD = 5600;
+  const LODGING_USD = 5526;
   const COST_SPLIT = 10;
+  const LODGING_SPLIT = 9;
 
   if(!document.getElementById('trk-style')){
     const st = document.createElement('style');
@@ -144,7 +145,7 @@ function App(STATE){
     const amt = computeAmounts(state);
     const guidePerPersonMXN = GUIDE_MXN / COST_SPLIT;
     const guidePerPersonUSD = amt.guideUSD / COST_SPLIT;
-    const lodgingPerPerson = LODGING_USD / COST_SPLIT;
+    const lodgingPerPerson = LODGING_USD / LODGING_SPLIT;
     return `
       <div class="notes">
         <div class="note">
@@ -156,7 +157,7 @@ function App(STATE){
           </ul>
         </div>
         <div class="note">
-          <strong>Airbnb (lodging):</strong> approximately ${money(LODGING_USD)} total, or ~${money(lodgingPerPerson)} per person — this is an estimate.
+          <strong>Airbnb (lodging):</strong> approximately ${money(LODGING_USD)} total, or ~${money(lodgingPerPerson)} per person (split 9 ways) — this is an estimate.
           <ul>
             <li>Address: Calle José López Alavez 1127, Barrio de Xochimilco, 68040, Oaxaca, Oaxaca, Mexico</li>
             <li>Listing: <a href="https://www.airbnb.com/l/X7WmFN6N" target="_blank" rel="noopener" style="color:var(--gld)">airbnb.com/l/X7WmFN6N</a></li>
