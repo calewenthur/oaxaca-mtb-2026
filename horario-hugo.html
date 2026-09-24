@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Oaxaca MTB — Itinerario para Hugo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div id="app"></div>
+<script>
+const CSS_TEXT = `
+:root{--bg:#0b1710;--card:#111d14;--alt:#162019;--bdr:#223027;--ora:#e56b1a;--grn:#60ab6f;--gld:#f0bf42;--red:#c03818;--txt:#ede8db;--dim:#8fa88a;
+--serif:'Cormorant Garamond',Georgia,serif;--sans:'Syne',sans-serif;--body:'DM Sans',sans-serif;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:hidden;max-width:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;max-width:100%;word-break:break-word}
+.wrap{max-width:880px;margin:0 auto;padding:56px 24px 90px}
+.eye{font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--ora);margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.eye::before{content:'';display:block;width:36px;height:1px;background:var(--ora)}
+h1{font-family:var(--serif);font-size:clamp(38px,7vw,64px);font-weight:300;line-height:.95;letter-spacing:-.01em;margin-bottom:14px}
+h1 em{font-style:italic;color:var(--ora)}
+.sub-date{font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.sub-desc{color:var(--dim);font-size:14.5px;max-width:560px;margin-top:14px;line-height:1.75}
+.section{margin-top:56px}
+.sh{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.sh h2{font-family:var(--serif);font-size:26px;font-weight:300;font-style:italic;white-space:nowrap}
+.sh-line{flex:1;height:1px;background:var(--bdr)}
+.sh-tag{font-family:var(--sans);font-size:9px;font-weight:800;letter-spacing:.28em;text-transform:uppercase;color:var(--ora);white-space:nowrap}
+.notes{display:flex;flex-direction:column;gap:14px}
+.note{background:var(--alt);border:1px solid var(--bdr);border-left:3px solid var(--gld);padding:20px 24px;font-size:13.5px;color:var(--dim);line-height:1.8}
+.note strong{color:var(--txt)}
+.note ul{list-style:none;margin-top:10px}
+.note li{padding:3px 0}
+.note li::before{content:'→ ';color:var(--gld)}
+.roster{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:.05em;background:var(--card);border:1px solid var(--bdr);padding:8px 14px;border-radius:2px}
+.days{display:flex;flex-direction:column;gap:3px}
+.dc{display:grid;grid-template-columns:92px 1fr;background:var(--card);border:1px solid var(--bdr)}
+.dc.alt{background:var(--alt)}
+.dn{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 8px;background:rgba(0,0,0,.25);border-right:1px solid var(--bdr);text-align:center}
+.dn-date{font-family:var(--sans);font-size:8px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.dn-big{font-family:var(--serif);font-size:30px;font-weight:700;line-height:1;color:var(--ora)}
+.dn-day{font-family:var(--sans);font-size:8px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.badge{margin-top:8px;font-size:7.5px;font-family:var(--sans);font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:3px 7px;border-radius:2px}
+.badge.ride{background:var(--ora);color:#0b1710}.badge.epic{background:var(--red);color:#fff}
+.badge.guide{background:var(--grn);color:#0b1710}.badge.culture{background:var(--gld);color:#1a1100}
+.badge.travel{background:#243529;color:var(--dim)}.badge.rest{background:var(--bdr);color:var(--dim)}
+.db{padding:16px 22px}
+.db-loc{font-family:var(--sans);font-size:9px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--grn);margin-bottom:6px}
+.db-title{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.2;margin-bottom:6px}
+.db-desc{color:var(--dim);font-size:13px;line-height:1.7}
+.db-desc strong{color:var(--txt)}
+footer{margin-top:70px;text-align:center;font-family:var(--sans);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#344a38}
+footer span{color:var(--ora)}
+@media(max-width:720px){
+  .dc{grid-template-columns:64px 1fr}
+  .dn{padding:12px 4px}.dn-big{font-size:22px}
+  .wrap{padding:40px 16px 70px}
+}
+@media(max-width:480px){
+  .wrap{padding:32px 14px 60px}
+  h1{font-size:clamp(30px,10vw,40px)}
+  .sub-date{font-size:10.5px;letter-spacing:.15em}
+  .sh h2{font-size:21px}
+  .sh-tag{display:none}
+  .dc{grid-template-columns:56px 1fr}
+  .dn{padding:10px 3px}
+  .dn-date{font-size:7px}
+  .dn-big{font-size:18px}
+  .dn-day{font-size:7px}
+  .badge{font-size:6.5px;padding:2px 5px}
+  .db{padding:14px 16px}
+  .db-title{font-size:17px}
+  .db-desc{font-size:12.5px}
+  footer{font-size:8.5px;letter-spacing:.12em}
+}
+`;
+
+function App(){
+  if(!document.getElementById('trk-style')){
+    const st = document.createElement('style');
+    st.id = 'trk-style';
+    st.textContent = CSS_TEXT;
+    document.head.appendChild(st);
+  }
+
+  const RIDERS = ['Bryson','David','Katy','Kennon','Lisi','Melissa','Chris','Phil','Cale','Jeff Kao'];
+
+  const DAYS = [
+    {d:'8 oct',n:'8',day:'Jue',badge:'travel',label:'Viaje',loc:'San Diego → Ciudad de Oaxaca',title:'Llegada — Bienvenidos a Oaxaca',desc:'El vuelo aterriza en OAX a las <strong>2:35PM</strong>. <strong>Hugo nos recoge en el aeropuerto.</strong> Check-in en el Airbnb, orientación por la noche con Hugo — confirmar la logística de traslados, a dormir temprano.'},
+    {d:'9 oct',n:'9',day:'Vie',badge:'ride',label:'Ruta',loc:'La Cumbre Ixtepeji',title:'Primeros Descensos — Vista Previa de Ixtepeji',desc:'Los primeros ciclistas calientan motores en Ixtepeji, bosque de pino a 10,500 pies. Quienes lleguen ese día pueden explorar los mercados en la ciudad.'},
+    {d:'10 oct',n:'10',day:'Sáb',badge:'ride',label:'Ruta',loc:'La Cumbre Ixtepeji · Grupo Completo',title:'Todos Adentro — Ixtepeji a Fondo + Cena',desc:'El grupo completo recorre los clásicos: <strong>El Toro, Llano Carreta, El Imposible.</strong> <strong>Por la noche: cena en Ancestral Cocina Tradicional, 6:45PM.</strong>'},
+    {d:'11 oct',n:'11',day:'Dom',badge:'epic',label:'Épico',loc:'Yubila → Ratón Loco → Mil Ríos',title:'El Grande — Mil Ríos',desc:'Nuevos senderos de Yubila hacia <strong>Mil Ríos</strong> — 13.2km, 1,250m de descenso, ~2hrs de flow en el backcountry. Lo más destacado del viaje.'},
+    {d:'12 oct',n:'12',day:'Lun',badge:'guide',label:'Guiado',loc:'San Pablo Etla',title:'Clásicos del Valle + Cena en Casa Oaxaca',desc:'Hugo y un guía local llevan al grupo por los clásicos de Etla vía el <strong>Centro Ecológico La Mesita</strong> (cuota de sendero de 80 pesos). <strong>Por la noche: cena en Casa Oaxaca, 7:30PM</strong> (reservación confirmada, grupo de 9) — celebrando el cumpleaños número 50 de David.'},
+    {d:'13 oct',n:'13',day:'Mar',badge:'ride',label:'Ruta',loc:'Guacamayas · San Gabriel Etla',title:'Hacia lo Desconocido — Guacamayas + Cena',desc:'Zona de senderos nueva y poco documentada arriba de San Gabriel Etla — subidas exigentes, descensos técnicos, vistas increíbles. <strong>Por la noche: cena en Papalotl Oaxaca (Salón Comedor), 7:00PM</strong> (reservación confirmada, grupo de 10).'},
+    {d:'14 oct',n:'14',day:'Mié',badge:'culture',label:'Cultura',loc:'Hierve el Agua → Teotitlán del Valle',title:'Día de Maravillas — Hierve el Agua',desc:'Hugo y un guía local trasladan al grupo 70km al este hacia las cascadas petrificadas, con descenso hacia el Río Salado. Se cierra con una comida familiar zapoteca y visita a un taller de tejido en Teotitlán. Cada persona traerá traje de baño — habrá tiempo para nadar en las pozas naturales. <strong>10 ciclistas + bicicletas</strong> — el día con más logística.'},
+    {d:'15 oct',n:'15',day:'Jue',badge:'ride',label:'Ruta',loc:'Benito Juárez · Sierra Norte',title:'El Mejor Secreto de la Sierra + Cena',desc:'Construcción de senderos nuevos — un descenso inolvidable de <strong>1,700m</strong> hacia el valle. Sin multitudes, terreno serio. <strong>Por la noche: cena en Barbacoa Obispo Cocina Rural, 6:15PM</strong> (reservación confirmada, grupo de 9, Jardín).'},
+    {d:'16 oct',n:'16',day:'Vie',badge:'epic',label:'Épico',loc:'Sierra Norte → Teotitlán del Valle',title:'Pistas Largas + Clase de Cocina',desc:'Último día completo de ciclismo — terreno largo y comprometido de punto a punto. Esa noche: <strong>clase de cocina oaxaqueña tradicional</strong> en Teotitlán (mole negro, tortillas, mezcal).'},
+    {d:'17 oct',n:'17',day:'Sáb',badge:'rest',label:'Descanso',loc:'Ciudad de Oaxaca',title:'Empacar Bicicletas + Día de Mercado',desc:'Se empacan las bicicletas en cajas, visita al <strong>Mercado Benito Juárez</strong> para mezcal, chocolate y textiles. La ciudad está en plena preparación para el Día de Muertos — cempasúchil y calaveras por todas partes (la fiesta es el 1–2 de noviembre, unas dos semanas después de que nos vayamos). <strong>Katy sale muy temprano</strong> (UA 5876, OAX → IAH, 6:30AM) — un día antes que el resto del grupo.'},
+    {d:'18 oct',n:'18',day:'Dom',badge:'travel',label:'Viaje',loc:'Aeropuerto Internacional de Oaxaca → Casa',title:'Salidas',desc:'9 ciclistas en el vuelo temprano de la mañana, el resto durante el día. Todos salen antes de que termine el día.'}
+  ];
+
+  function rosterHTML(){
+    return `<div class="roster">` + RIDERS.map(n=>`<div class="chip">${n}</div>`).join('') + `</div>`;
+  }
+
+  function calendarHTML(){
+    return `<div class="days">` + DAYS.map((d,i)=>`
+        <div class="dc ${i%2?'alt':''}">
+          <div class="dn"><div class="dn-date">${d.d}</div><div class="dn-big">${d.n}</div><div class="dn-day">${d.day}</div><div class="badge ${d.badge}">${d.label}</div></div>
+          <div class="db"><div class="db-loc">${d.loc}</div><div class="db-title">${d.title}</div><div class="db-desc">${d.desc}</div></div>
+        </div>`).join('') + `</div>`;
+  }
+
+  function render(){
+    const root = document.getElementById('app');
+    root.innerHTML = `
+      <div class="wrap">
+        <div class="eye">Sierra Norte · Expedición de Mountain Bike</div>
+        <h1>Oaxaca MTB <em>Itinerario</em></h1>
+        <div class="sub-date">8–18 de octubre, 2026 · 10 viajeros</div>
+        <div class="sub-desc">Itinerario del viaje para que Hugo lo revise y confirme.</div>
+
+        <div class="section">
+          <div class="sh"><h2>Grupo</h2><div class="sh-line"></div><div class="sh-tag">10 Personas</div></div>
+          ${rosterHTML()}
+        </div>
+
+        <div class="section">
+          <div class="sh"><h2>Aviso Importante</h2><div class="sh-line"></div><div class="sh-tag">Llegada</div></div>
+          <div class="notes">
+            <div class="note">
+              <strong>Recogida en el aeropuerto:</strong> Hugo recoge a todo el grupo en el Aeropuerto Internacional de Oaxaca (OAX) el jueves 8 de octubre, con llegada de vuelo a las 2:35PM.
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="sh"><h2>Itinerario Día a Día</h2><div class="sh-line"></div><div class="sh-tag">8–18 Oct</div></div>
+          ${calendarHTML()}
+        </div>
+
+        <footer><span>Expedición Oaxaca MTB</span> &nbsp;·&nbsp; Sierra Norte, México &nbsp;·&nbsp; 8–18 de octubre, 2026</footer>
+      </div>
+    `;
+  }
+
+  render();
+}
+
+App();
+</script>
+</body>
+</html>
