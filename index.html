@@ -94,7 +94,7 @@ footer span{color:var(--ora)}
 
 function App(STATE){
   const GUIDE_MXN = 50000;
-  const FX_RATE = 17.0344;
+  const FX_RATE = 17.6805;
   const LODGING_USD = 5526;
   const COST_SPLIT = 10;
   const LODGING_SPLIT = 9; // Jeff Kao has separate lodging arrangements
@@ -136,7 +136,7 @@ function App(STATE){
     return `
       <div class="costgrid">
         <div class="cc hi"><div class="cc-label">Per Person</div><div class="cc-num">${money(amt.perPerson)}</div><div class="cc-sub">Split 10 ways</div></div>
-        <div class="cc"><div class="cc-label">Guide · Hugo (all-in)</div><div class="cc-num">${money(amt.guideUSD)}</div><div class="cc-sub">50,000 MXN @ ~17.03/USD (Aug 30, 2026)</div></div>
+        <div class="cc"><div class="cc-label">Guide · Hugo (all-in)</div><div class="cc-num">${money(amt.guideUSD)}</div><div class="cc-sub">50,000 MXN @ ~17.68/USD (Sep 26, 2026)</div></div>
         <div class="cc"><div class="cc-label">Lodging · Airbnb (10 nights)</div><div class="cc-num">${money(LODGING_USD)}</div><div class="cc-sub">Base camp, full group<br>Calle José López Alavez 1127, Barrio de Xochimilco, 68040, Oaxaca, Oaxaca, Mexico<br><a href="https://www.airbnb.com/l/X7WmFN6N" target="_blank" rel="noopener" style="color:var(--ora)">View listing →</a></div></div>
       </div>`;
   }
